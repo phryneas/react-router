@@ -11,9 +11,13 @@
     "typegen:watch": "react-router typegen --watch"
   },
   "dependencies": {
+    "@apollo/client": "^3.11.9",
+    "@apollo/client-react-streaming": "https://pkg.pr.new/apollographql/apollo-client-nextjs/@apollo/client-react-streaming@f3a27e6.tgz",
     "@react-router/node": "7.0.0-pre.5",
     "@react-router/serve": "7.0.0-pre.5",
+    "graphql": "^16.9.0",
     "isbot": "^5.1.17",
+    "patch-package": "^8.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router": "7.0.0-pre.5"
@@ -31,5 +35,8 @@
   },
   "engines": {
     "node": ">=20.0.0"
+  },
+  "overrides": {
+    "turbo-stream": "npm:@phryneas/turbo-stream@2.4.1-pr.51.1.3fa62cb"
   }
 }
