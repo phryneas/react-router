@@ -1,7 +1,7 @@
 import { useLoaderData, type MetaFunction } from "react-router";
 import { Welcome } from "../welcome";
 import type { Route } from "./+types.home";
-import type { QueryRef, TypedDocumentNode } from "@apollo/client/index.js";
+import type { TypedDocumentNode } from "@apollo/client/index.js";
 import { gql, useReadQuery } from "@apollo/client/index.js";
 import { apolloLoader } from "~/apollo";
 
@@ -33,20 +33,14 @@ const GET_POSTS: TypedDocumentNode<Posts> = gql`
 
 export const loader = apolloLoader<Route.LoaderArgs>()(({ preloadQuery }) => {
   const postsRef = preloadQuery(GET_POSTS);
-  console.dir({ ...postsRef });
   return {
     postsRef,
   };
 });
 
 export default function Home() {
-  const { postsRef } = useLoaderData<Route.LoaderData>();
-
-  console.log({ postsRef });
-
-  const posts = useReadQuery(
-    postsRef as QueryRef<Posts> /** why is this type all weird? */
-  ).data.posts.data;
+  const { postsRef } = useLoaderData<typeof loader>();
+  const posts = useReadQuery(postsRef).data.posts.data;
 
   return (
     <div className="p-2 flex gap-2">

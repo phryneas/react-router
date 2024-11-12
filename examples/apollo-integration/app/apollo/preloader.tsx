@@ -1,7 +1,16 @@
 import type { CreateServerLoaderArgs } from "react-router/types";
 import type { ApolloClient } from "./ApolloClient";
+import type { PreloadedQueryRef, QueryRef } from "@apollo/client/index.js";
 import { type PreloadQueryFunction } from "@apollo/client/index.js";
 import { createTransportedQueryPreloader } from "./createQueryPreloader";
+import type { SerializesTo } from "react-router/types";
+
+type MarkedForSerialization<T> = T extends PreloadedQueryRef<
+  infer Data,
+  infer Variables
+>
+  ? SerializesTo<QueryRef<Data, Variables>>
+  : { [K in keyof T]: MarkedForSerialization<T[K]> };
 
 type ApolloLoader = <LoaderArgs extends CreateServerLoaderArgs<unknown>>() => <
   ReturnValue
@@ -11,7 +20,7 @@ type ApolloLoader = <LoaderArgs extends CreateServerLoaderArgs<unknown>>() => <
       preloadQuery: PreloadQueryFunction;
     }
   ) => ReturnValue
-) => (args: LoaderArgs) => ReturnValue;
+) => (args: LoaderArgs) => MarkedForSerialization<ReturnValue>;
 
 export function createApolloLoaderHandler(
   makeClient: (request: Request) => ApolloClient
@@ -22,6 +31,6 @@ export function createApolloLoaderHandler(
     return loader({
       ...args,
       preloadQuery,
-    });
+    }) as any;
   };
 }
