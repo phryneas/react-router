@@ -10,7 +10,6 @@ import type { ApolloClient } from './ApolloClient'
 import type {
   DocumentNode,
   PreloadQueryFunction,
-  QueryRef,
   WatchQueryOptions,
 } from '@apollo/client/index.js'
 
@@ -77,7 +76,7 @@ export interface InternalTransportedQueryRef<
     options: TransportedQueryRefOptions
     stream: ReadableStream<string>
   }
-  _hydrated?: ReturnType<PreloadQueryFunction>
+  _hydrated?: boolean
 }
 
 export function isTransportedQueryRef(
@@ -102,19 +101,6 @@ export function createTransportedQueryRef<TData, TVariables>(
       stream: stream.pipeThrough(encodeStream),
     },
   }
-}
-
-export const ensureHydrated = (
-  queryRef: QueryRef<any, unknown>,
-  apolloClient: ApolloClient,
-) => {
-  if (isTransportedQueryRef(queryRef)) {
-    if (!queryRef._hydrated) {
-      queryRef._hydrated = reviveTransportedQueryRef(queryRef, apolloClient)
-    }
-    return queryRef._hydrated
-  }
-  return queryRef
 }
 
 export function reviveTransportedQueryRef(
