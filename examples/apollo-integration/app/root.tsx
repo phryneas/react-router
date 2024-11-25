@@ -2,6 +2,7 @@ import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import type { LinksFunction } from "react-router";
 
 import "./app.css";
+import { ApolloHydrationHelper } from "./apollo/ApolloHydrationHelper";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -26,7 +27,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <ApolloHydrationHelper>{children}</ApolloHydrationHelper>
         <ScrollRestoration />
         <Scripts />
       </body>
